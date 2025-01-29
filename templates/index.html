@@ -2,7 +2,14 @@
 <html>
 <head>
     <title>EVALARM SOS Platform</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=1">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/asset-dashboard.css">
+    <link rel="stylesheet" href="/static/css/device-manager.css">
+    <link rel="stylesheet" href="/static/css/maintenance-planner.css">
+    <link rel="stylesheet" href="/static/css/asset-manager.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/asset-creation-dialog.css">
     <!-- Vue.js als ES Module -->
     <script type="importmap">
     {
@@ -15,49 +22,8 @@
     </script>
 </head>
 <body>
-    <div id="app">
-        <header>
-            <div class="header-container">
-                <div class="platform-title">EVALARM SOS Platform</div>
-                <div class="company-info">
-                    <div class="powered-by">
-                        powered by <span class="company-name">nextX AG</span>
-                    </div>
-                    <div class="made-with-love">
-                        Made with ❤️ in Switzerland
-                        <img src="/static/img/swiss-flag.svg" class="swiss-flag" alt="Swiss flag"/>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <main>
-            <nav class="sidebar" :class="{ 'collapsed': sidebarCollapsed }">
-                <div class="nav-items">
-                    <button @click="setView('dashboard')" :class="{ active: currentView === 'dashboard' }">
-                        Dashboard
-                    </button>
-                    <button @click="setView('model')" :class="{ active: currentView === 'model' }">
-                        3D-Modell
-                    </button>
-                    <button @click="setView('devices')" :class="{ active: currentView === 'devices' }">
-                        Geräte
-                    </button>
-                    <button @click="setView('alarms')" :class="{ active: currentView === 'alarms' }">
-                        Alarme
-                    </button>
-                </div>
-            </nav>
-
-            <div class="content">
-                <dashboard-component v-if="currentView === 'dashboard'"></dashboard-component>
-                <model-viewer v-if="currentView === 'model'"></model-viewer>
-                <devices-component v-if="currentView === 'devices'"></devices-component>
-                <alarms-component v-if="currentView === 'alarms'"></alarms-component>
-            </div>
-        </main>
-    </div>
-
+    <!-- Nur der Mount-Punkt für Vue -->
+    <div id="app"></div>
     <script type="module" src="/static/js/main.js"></script>
 </body>
 </html> 

@@ -1,7 +1,7 @@
 import Scene3D from './3d/Scene3D.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as THREE from 'three';
-import { ref, onMounted, shallowRef } from 'vue';
+import { ref, onMounted, shallowRef, watch } from 'vue';
 
 export default {
     name: 'ModelViewer',
@@ -32,40 +32,36 @@ export default {
                     </select>
                     <input v-model="deviceName" placeholder="Gerätename" />
                 </div>
-                <div class="model-transform-controls">
-                    <div class="position-control">
+                <div class="grid-settings">
+                    <div class="setting-group">
                         <label>Position:</label>
-                        <div class="axis-inputs">
-                            <input type="number" v-model.number="modelPosition.x" step="0.5" @change="updateModelPosition" placeholder="X">
-                            <input type="number" v-model.number="modelPosition.y" step="0.5" @change="updateModelPosition" placeholder="Y">
-                            <input type="number" v-model.number="modelPosition.z" step="0.5" @change="updateModelPosition" placeholder="Z">
+                        <div class="position-inputs">
+                            <input type="number" v-model.number="gridPosition.x" placeholder="X">
+                            <input type="number" v-model.number="gridPosition.y" placeholder="Y">
+                            <input type="number" v-model.number="gridPosition.z" placeholder="Z">
+                        </div>
+                        <div class="position-actions">
+                            <button @click="centerModel">Modell zentrieren</button>
+                            <button @click="alignToGrid">Am Grid ausrichten</button>
                         </div>
                     </div>
-                    <button @click="centerModel">Modell zentrieren</button>
-                    <button @click="alignModelToGrid">Am Grid ausrichten</button>
-                </div>
-                <div class="grid-controls">
-                    <label>Grid-Größe:</label>
-                    <div class="grid-size-inputs">
-                        <div class="input-group">
-                            <label>Breite (X):</label>
-                            <input 
-                                type="number" 
-                                v-model.number="gridConfig.size" 
-                                step="10"
-                                min="10"
-                                @change="updateGrid"
-                            > m
-                        </div>
-                        <div class="input-group">
-                            <label>Teilung:</label>
-                            <input 
-                                type="number" 
-                                v-model.number="gridConfig.divisions" 
-                                step="1"
-                                min="1"
-                                @change="updateGrid"
-                            > m
+                    <div class="setting-group">
+                        <label>Grid-Größe:</label>
+                        <div class="grid-size-inputs">
+                            <div class="input-group">
+                                <label>Breite (X):</label>
+                                <input type="number" 
+                                       v-model.number="gridConfig.size" 
+                                       step="10" 
+                                       min="10"> m
+                            </div>
+                            <div class="input-group">
+                                <label>Teilung:</label>
+                                <input type="number" 
+                                       v-model.number="gridConfig.divisions" 
+                                       step="1" 
+                                       min="1"> m
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -109,8 +105,14 @@ export default {
         const modelPosition = ref({ x: 0, y: 0, z: 0 });
 
         const gridConfig = ref({
-            size: 200,        // 200m x 200m Grid
-            divisions: 2      // 2m Abstand zwischen Linien
+            size: 200,
+            divisions: 2
+        });
+
+        const gridPosition = ref({
+            x: 0,
+            y: 0,
+            z: 0
         });
 
         const createBaseGrid = () => {
@@ -399,12 +401,17 @@ export default {
         };
 
         const updateGrid = () => {
-            // Validierung
-            if (gridConfig.value.size < 10) gridConfig.value.size = 10;
-            if (gridConfig.value.divisions < 1) gridConfig.value.divisions = 1;
+            if (!engine.grid) return;
             
-            createBaseGrid();
+            engine.scene.remove(engine.grid);
+            engine.grid = new THREE.GridHelper(
+                gridConfig.value.size,
+                gridConfig.value.size / gridConfig.value.divisions
+            );
+            engine.scene.add(engine.grid);
         };
+
+        watch([() => gridConfig.value.size, () => gridConfig.value.divisions], updateGrid);
 
         // CSS für die neuen Controls
         const style = document.createElement('style');
@@ -487,6 +494,7 @@ export default {
             centerModel,
             alignModelToGrid,
             gridConfig,
+            gridPosition,
             updateGrid
         };
     },

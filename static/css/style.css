@@ -16,6 +16,11 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: var(--background-color);
@@ -34,22 +39,67 @@ body {
     color: var(--primary-color);
 }
 
-main {
+/* App Container */
+#app {
+    height: 100vh;
     display: flex;
-    height: calc(100vh - 64px);
+    flex-direction: column;
 }
 
+/* Main Layout */
+main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Sidebar */
 .sidebar {
-    width: var(--sidebar-width);
-    background-color: white;
-    padding: 1rem;
-    box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+    width: 250px;
+    background: white;
+    border-right: 1px solid var(--border-color);
+    z-index: 10;
 }
 
+/* Content Area */
 .content {
     flex: 1;
+    position: relative;
+    overflow: auto;
+}
+
+/* Komponenten Container */
+.asset-dashboard,
+.asset-manager,
+.model-viewer,
+.device-manager,
+.maintenance-planner {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Scene3D Container spezifisch für ModelViewer */
+.scene3d-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Anpassungen für ModelViewer Controls */
+.model-viewer .controls {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
     padding: 1rem;
-    overflow-y: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Components */
@@ -110,8 +160,8 @@ main {
 
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
@@ -122,18 +172,22 @@ main {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.metric-card h3 {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
 .metric-value {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: bold;
     color: var(--primary-color);
-    margin: 0.5rem 0;
+    margin-bottom: 0.5rem;
 }
 
 .metric-change {
     font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    color: var(--text-color);
 }
 
 .metric-change.positive {
@@ -144,15 +198,21 @@ main {
     color: var(--danger-color);
 }
 
-.metric-change.neutral {
-    color: var(--text-color);
-}
-
 .active-alarms {
     background: white;
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.active-alarms h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.no-alarms {
+    color: var(--secondary-color);
+    font-style: italic;
 }
 
 .alarm-list {
@@ -227,4 +287,132 @@ main {
 
 .controls .button:hover {
     background: var(--primary-color);
+}
+
+/* Dashboard Layout */
+.dashboard {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    background: var(--background-color);
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metric-card h3 {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.metric-change {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.metric-change.positive {
+    color: var(--success-color);
+}
+
+.metric-change.negative {
+    color: var(--danger-color);
+}
+
+.active-alarms {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.active-alarms h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.no-alarms {
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+/* Basis-Layout */
+.content-page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--background-color);
+    padding: 2rem;
+}
+
+/* Standard Header für alle Seiten */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Standard Content-Bereich */
+.page-content {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: auto;
+    padding: 1rem;
+}
+
+/* Footer-Bereich */
+.powered-by {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-color-light);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.powered-by img {
+    height: 20px;
+    width: auto;
+}
+
+.powered-by .heart {
+    color: #ff4444;
+}
+
+.powered-by .flag {
+    height: 14px;
+    width: auto;
+    margin-left: 0.25rem;
 } 

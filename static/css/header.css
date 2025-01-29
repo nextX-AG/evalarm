@@ -1,0 +1,113 @@
+.header-container {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem 2rem;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tenant-logo {
+    height: 50px;  /* Logo größer */
+    width: auto;
+    object-fit: contain;
+}
+
+.platform-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.header-right {
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+}
+
+.tenant-branding {
+    display: flex;
+    align-items: center;
+}
+
+.tenant-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.company-info {
+    text-align: right;
+    position: fixed;
+    bottom: 1rem;
+    right: 2rem;
+    background: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+}
+
+.content {
+    margin-bottom: 4rem;
+}
+
+.powered-by {
+    font-size: 1rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.company-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.made-with-love {
+    font-size: 0.75rem;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.swiss-flag {
+    height: 14px;
+    width: auto;
+}
+
+.nextx-logo {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+.nextx-logo-img {
+    height: 28px;
+    width: auto;
+    vertical-align: middle;
+}
+
+.powered-by-nextx {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+} 

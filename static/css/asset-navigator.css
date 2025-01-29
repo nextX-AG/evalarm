@@ -1,0 +1,74 @@
+.asset-navigator {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--background-color);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: white;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.breadcrumb-item:hover {
+    background: var(--background-color);
+}
+
+.separator {
+    color: var(--text-color-light);
+}
+
+.asset-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.floorplan-view {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+}
+
+.floorplan-view img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.object-overlay {
+    position: absolute;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.object-overlay:hover .object-tooltip {
+    opacity: 1;
+}
+
+.object-tooltip {
+    position: absolute;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+} 

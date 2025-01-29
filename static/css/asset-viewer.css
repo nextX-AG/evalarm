@@ -1,0 +1,220 @@
+.asset-viewer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--background-color);
+    position: relative;
+}
+
+.viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border-bottom: 1px solid var(--border-color);
+    z-index: 10;
+}
+
+.view-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.view-controls button {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.view-controls button.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.viewer-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.viewer-content {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 3D View */
+.view-3d {
+    height: 100%;
+    position: relative;
+}
+
+.overlay-controls {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.camera-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.25rem;
+}
+
+.camera-controls button {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.camera-controls button:nth-child(1) { grid-column: 1; grid-row: 2; }
+.camera-controls button:nth-child(2) { grid-column: 2; grid-row: 1; }
+.camera-controls button:nth-child(3) { grid-column: 2; grid-row: 3; }
+.camera-controls button:nth-child(4) { grid-column: 3; grid-row: 2; }
+
+.zoom-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+/* 2D View */
+.view-2d {
+    height: 100%;
+    overflow: auto;
+    padding: 1rem;
+}
+
+.floor-plan {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.floor-plan img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.device-marker {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+.device-marker i {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.device-marker:hover i {
+    transform: scale(1.2);
+}
+
+.device-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    white-space: nowrap;
+    display: none;
+}
+
+.device-marker:hover .device-tooltip {
+    display: block;
+}
+
+/* Device Types */
+.device-marker.emergency_button i { color: var(--danger-color); }
+.device-marker.sensor i { color: var(--info-color); }
+.device-marker.gateway i { color: var(--success-color); }
+
+/* Device Details Sidebar */
+.device-details {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    background: white;
+    box-shadow: -2px 0 4px rgba(0,0,0,0.1);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+}
+
+.details-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.details-content {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.detail-group {
+    margin-bottom: 1rem;
+}
+
+.detail-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+    margin-bottom: 0.25rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.status-badge.status-operational { background: var(--success-color); color: white; }
+.status-badge.status-warning { background: var(--warning-color); color: white; }
+.status-badge.status-critical { background: var(--danger-color); color: white; }
+.status-badge.status-maintenance { background: var(--info-color); color: white; }
+.status-badge.status-offline { background: var(--text-color-light); color: white; } 

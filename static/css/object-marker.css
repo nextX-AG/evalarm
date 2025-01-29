@@ -1,0 +1,129 @@
+.object-marker {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.toolbar {
+    padding: 1rem;
+    background: white;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.drawing-tools {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.drawing-tools button {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.drawing-tools button.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.canvas-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: crosshair;
+}
+
+.object-details {
+    position: absolute;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    min-width: 300px;
+}
+
+.device-list {
+    margin-top: 1rem;
+}
+
+.device-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--background-color);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+/* Fenster-spezifische Styles */
+.window-object {
+    border: 2px solid var(--primary-color);
+    background: rgba(var(--primary-color-rgb), 0.1);
+}
+
+.window-status {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: 8px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.status-indicator.closed {
+    color: var(--success-color);
+}
+
+.status-indicator.open {
+    color: var(--danger-color);
+}
+
+.status-indicator.partial {
+    color: var(--warning-color);
+}
+
+.sensor-list {
+    margin-top: 0.5rem;
+}
+
+.sensor-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+}
+
+.sensor-status {
+    margin-left: auto;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+}
+
+.sensor-status.closed { background: var(--success-color); color: white; }
+.sensor-status.open { background: var(--danger-color); color: white; } 
