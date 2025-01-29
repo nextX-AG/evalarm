@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EVALARM SOS Platform</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Vue.js als ES Module -->
+    <script type="importmap">
+    {
+        "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js",
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="header-container">
+                <div class="platform-title">EVALARM SOS Platform</div>
+                <div class="company-info">
+                    <div class="powered-by">
+                        powered by <span class="company-name">nextX AG</span>
+                    </div>
+                    <div class="made-with-love">
+                        Made with ❤️ in Switzerland
+                        <img src="/static/img/swiss-flag.svg" class="swiss-flag" alt="Swiss flag"/>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <nav class="sidebar" :class="{ 'collapsed': sidebarCollapsed }">
+                <div class="nav-items">
+                    <button @click="setView('dashboard')" :class="{ active: currentView === 'dashboard' }">
+                        Dashboard
+                    </button>
+                    <button @click="setView('model')" :class="{ active: currentView === 'model' }">
+                        3D-Modell
+                    </button>
+                    <button @click="setView('devices')" :class="{ active: currentView === 'devices' }">
+                        Geräte
+                    </button>
+                    <button @click="setView('alarms')" :class="{ active: currentView === 'alarms' }">
+                        Alarme
+                    </button>
+                </div>
+            </nav>
+
+            <div class="content">
+                <dashboard-component v-if="currentView === 'dashboard'"></dashboard-component>
+                <model-viewer v-if="currentView === 'model'"></model-viewer>
+                <devices-component v-if="currentView === 'devices'"></devices-component>
+                <alarms-component v-if="currentView === 'alarms'"></alarms-component>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="/static/js/main.js"></script>
+</body>
+</html> 
