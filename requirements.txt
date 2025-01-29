@@ -1,0 +1,6 @@
+streamlit==1.31.1
+pandas==2.2.0
+streamlit-webrtc==0.47.1
+streamlit-javascript==0.1.5
+aiohttp==3.9.1
+aiohttp-cors==0.7.0 

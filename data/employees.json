@@ -1,0 +1,18 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alice Müller",
+      "mac": "84ba20fffe941ba2",
+      "department": "Verkauf",
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Bob Schmidt",
+      "mac": "30ae7bea4a30",
+      "department": "Lager",
+      "active": true
+    }
+  ]
+} 
