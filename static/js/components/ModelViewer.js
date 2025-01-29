@@ -32,6 +32,43 @@ export default {
                     </select>
                     <input v-model="deviceName" placeholder="Gerätename" />
                 </div>
+                <div class="model-transform-controls">
+                    <div class="position-control">
+                        <label>Position:</label>
+                        <div class="axis-inputs">
+                            <input type="number" v-model.number="modelPosition.x" step="0.5" @change="updateModelPosition" placeholder="X">
+                            <input type="number" v-model.number="modelPosition.y" step="0.5" @change="updateModelPosition" placeholder="Y">
+                            <input type="number" v-model.number="modelPosition.z" step="0.5" @change="updateModelPosition" placeholder="Z">
+                        </div>
+                    </div>
+                    <button @click="centerModel">Modell zentrieren</button>
+                    <button @click="alignModelToGrid">Am Grid ausrichten</button>
+                </div>
+                <div class="grid-controls">
+                    <label>Grid-Größe:</label>
+                    <div class="grid-size-inputs">
+                        <div class="input-group">
+                            <label>Breite (X):</label>
+                            <input 
+                                type="number" 
+                                v-model.number="gridConfig.size" 
+                                step="10"
+                                min="10"
+                                @change="updateGrid"
+                            > m
+                        </div>
+                        <div class="input-group">
+                            <label>Teilung:</label>
+                            <input 
+                                type="number" 
+                                v-model.number="gridConfig.divisions" 
+                                step="1"
+                                min="1"
+                                @change="updateGrid"
+                            > m
+                        </div>
+                    </div>
+                </div>
             </div>
             <Scene3D 
                 ref="scene3dRef"
@@ -58,7 +95,7 @@ export default {
         const cube = ref(null);
         let sceneData = null; // Speichert die Daten aus scene-ready
 
-        // Nicht-reaktives Engine-Objekt für Three.js
+        // Nicht-reaktives Engine-Objekt
         const engine = {
             scene: null,
             camera: null,
@@ -68,69 +105,122 @@ export default {
             grid: null
         };
 
+        // Modellposition als reactive ref
+        const modelPosition = ref({ x: 0, y: 0, z: 0 });
+
+        const gridConfig = ref({
+            size: 200,        // 200m x 200m Grid
+            divisions: 2      // 2m Abstand zwischen Linien
+        });
+
+        const createBaseGrid = () => {
+            if (engine.grid) {
+                engine.scene.remove(engine.grid);
+            }
+            engine.grid = new THREE.GridHelper(
+                gridConfig.value.size, 
+                gridConfig.value.size / gridConfig.value.divisions
+            );
+            engine.scene.add(engine.grid);
+        };
+
         const onSceneReady = ({ scene, camera, renderer, controls }) => {
-            // Three.js-Objekte im Engine-Objekt speichern
             engine.scene = scene;
             engine.camera = camera;
             engine.renderer = renderer;
             engine.controls = controls;
 
-            // Grid hinzufügen
-            engine.grid = new THREE.GridHelper(20, 20);
-            engine.scene.add(engine.grid);
+            // Festes Grid erstellen
+            createBaseGrid();
+        };
+
+        const updateModelPosition = () => {
+            if (!engine.currentModel) return;
+            
+            engine.currentModel.position.set(
+                modelPosition.value.x,
+                modelPosition.value.y,
+                modelPosition.value.z
+            );
+        };
+
+        const centerModel = () => {
+            if (!engine.currentModel) return;
+
+            // Berechne Modell-Bounding Box
+            const box = new THREE.Box3().setFromObject(engine.currentModel);
+            const center = box.getCenter(new THREE.Vector3());
+
+            // Setze Position auf 0,0,0
+            modelPosition.value = { x: 0, y: 0, z: 0 };
+            engine.currentModel.position.set(0, 0, 0);
+        };
+
+        const alignModelToGrid = () => {
+            if (!engine.currentModel) return;
+
+            // Berechne Modell-Bounding Box
+            const box = new THREE.Box3().setFromObject(engine.currentModel);
+            const size = box.getSize(new THREE.Vector3());
+
+            // Setze Modell auf nächste Grid-Linie
+            modelPosition.value = {
+                x: Math.round(modelPosition.value.x),
+                y: Math.round(modelPosition.value.y),
+                z: Math.round(modelPosition.value.z)
+            };
+            updateModelPosition();
         };
 
         const loadModel = async (url) => {
-            if (!engine.scene) {
-                console.error('Scene nicht bereit');
-                return;
-            }
-
+            if (!engine.scene) return;
+            
             try {
                 loading.value = true;
-
-                // Altes Modell entfernen
                 if (engine.currentModel) {
                     engine.scene.remove(engine.currentModel);
                 }
 
                 const loader = new GLTFLoader();
                 const gltf = await loader.loadAsync(url);
-                
-                gltf.scene.traverse((node) => {
-                    if (node.isMesh) {
-                        node.castShadow = true;
-                        node.receiveShadow = true;
-                    }
-                });
-
                 engine.currentModel = gltf.scene;
+
+                // Modell initial auf 0,0,0 setzen
+                modelPosition.value = { x: 0, y: 0, z: 0 };
+                engine.currentModel.position.set(0, 0, 0);
+                
                 engine.scene.add(engine.currentModel);
-
-                // Kamera auf Modell ausrichten
-                const box = new THREE.Box3().setFromObject(engine.currentModel);
-                const center = box.getCenter(new THREE.Vector3());
-                const size = box.getSize(new THREE.Vector3());
                 
-                const maxDim = Math.max(size.x, size.y, size.z);
-                const fov = engine.camera.fov * (Math.PI / 180);
-                let cameraZ = Math.abs(maxDim / Math.tan(fov / 2));
-                
-                engine.camera.position.set(
-                    center.x + cameraZ/2,
-                    center.y + cameraZ/2,
-                    center.z + cameraZ
-                );
-                engine.camera.lookAt(center);
-                engine.controls.target.copy(center);
-                engine.controls.update();
+                // Kamera ausrichten
+                fitCameraToModel();
 
+                console.log('Modell erfolgreich geladen');
             } catch (error) {
                 console.error('Fehler beim Laden des Modells:', error);
-                throw error;
             } finally {
                 loading.value = false;
             }
+        };
+
+        const fitCameraToModel = () => {
+            if (!engine.currentModel) return;
+
+            const box = new THREE.Box3().setFromObject(engine.currentModel);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const fov = engine.camera.fov * (Math.PI / 180);
+            let cameraZ = Math.abs(maxDim / Math.tan(fov / 2));
+            
+            engine.camera.position.set(
+                center.x + cameraZ/2,
+                center.y + cameraZ/2,
+                center.z + cameraZ
+            );
+            engine.camera.lookAt(center);
+            engine.controls.target.copy(center);
+            engine.controls.update();
         };
 
         const handleModelUpload = async (event) => {
@@ -308,6 +398,61 @@ export default {
             renderer.value.render(scene3dRef.value.scene, camera.value);
         };
 
+        const updateGrid = () => {
+            // Validierung
+            if (gridConfig.value.size < 10) gridConfig.value.size = 10;
+            if (gridConfig.value.divisions < 1) gridConfig.value.divisions = 1;
+            
+            createBaseGrid();
+        };
+
+        // CSS für die neuen Controls
+        const style = document.createElement('style');
+        style.textContent = `
+            .model-transform-controls {
+                padding: 10px;
+                background: rgba(0,0,0,0.1);
+                border-radius: 4px;
+                margin-top: 10px;
+            }
+            .position-control {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+            .axis-inputs {
+                display: flex;
+                gap: 5px;
+            }
+            .axis-inputs input {
+                width: 80px;
+                padding: 5px;
+            }
+            .grid-controls {
+                padding: 10px;
+                background: rgba(0,0,0,0.1);
+                border-radius: 4px;
+                margin-top: 10px;
+            }
+            .grid-size-inputs {
+                display: flex;
+                gap: 20px;
+                margin-top: 5px;
+            }
+            .input-group {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            .input-group input {
+                width: 60px;
+                padding: 3px;
+                margin: 0 5px;
+            }
+        `;
+        document.head.appendChild(style);
+
         onMounted(() => {
             scene3dRef.value = document.querySelector('.scene3d-container');
             loadDevices();
@@ -336,7 +481,13 @@ export default {
             toggleGrid,
             onWindowResize,
             loadDevices,
-            animate
+            animate,
+            modelPosition,
+            updateModelPosition,
+            centerModel,
+            alignModelToGrid,
+            gridConfig,
+            updateGrid
         };
     },
     beforeUnmount() {
