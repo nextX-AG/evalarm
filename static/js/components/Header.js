@@ -13,7 +13,7 @@ export default {
             <div class="header-content">
                 <div class="header-left">
                     <img :src="tenant.logo" :alt="tenant.name" class="tenant-logo">
-                    <span class="platform-title">SOS Platform</span>
+                    <span class="platform-title">IoT Lichtkuppelüberwachung</span>
                 </div>
                 <div class="header-right">
                     powered by nextX AG

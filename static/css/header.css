@@ -1,7 +1,7 @@
 .header-container {
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 1rem 2rem;
+    padding: 1rem;
 }
 
 .header-content {
@@ -16,19 +16,22 @@
 .header-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
+    margin-left: 1rem;
 }
 
 .tenant-logo {
-    height: 50px;  /* Logo größer */
+    height: 50px;
     width: auto;
     object-fit: contain;
+    margin-left: -1rem;
 }
 
 .platform-title {
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--text-color);
+    white-space: nowrap;
 }
 
 .header-right {
